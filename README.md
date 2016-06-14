@@ -10,19 +10,26 @@ meteor add mys:fonts
 
 ## fonts.json
 
+**- `map`**
+
 This package requires a `map` of fonts that contains:
 
 - **source path** - an absolute path where to look for a font
 - **destination path** - an absolute path where to put that font
 
+**- `extensions: array`** default: `ttf, woof`
+
 It also depends on `extensions`. It tells the plugin which files we want to use as fonts.
 
 By default:
-
 - ttf
 - woof
 
-It's important to keep `fonts.json` inside the root directory of your file.
+**- `verbose: boolean`** default: `false`
+
+Displays informations about used fonts.
+
+It's important to keep `fonts.json` inside the **root directory** of your app.
 
 ## An example configuration
 

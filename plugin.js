@@ -1,11 +1,13 @@
 import {
-  defaults,
-  compact
+  defaults
 } from 'lodash';
 
 import fs from 'fs';
 
+import colors from 'colors';
+
 const defaultConfig = {
+  verbose: false,
   extensions: [
     'ttf',
     'woof'
@@ -15,57 +17,44 @@ const defaultConfig = {
 
 const config = defaults(getConfig('fonts.json'), defaultConfig);
 
-class FontsCompiler extends CachingCompiler {
-  constructor() {
-    super({
-      compilerName: 'fontsCompiler',
-      defaultCacheSize: 1024 * 1024 * 10,
-    });
-  }
-
+class FontsCompiler {
   processFilesForTarget(files) {
-    if (!config.map) {
-      return;
-    }
-
-    const proccesedFiles = compact(files.map((file) => {
-      const customPath = config.map[file.getPathInPackage()];
-
-      if (!customPath) {
-        return;
-      }
-
-      file.customPath = customPath;
-
-      return file;
-    }));
-
-    if (proccesedFiles) {
-      super.processFilesForTarget(proccesedFiles);
-    }
-  }
-
-  getCacheKey(file) {
-    return file.getSourceHash();
-  }
-
-  compileResultSize(result) {
-    return result.length;
-  }
-
-  compileOneFile(file) {
-    return file.getContentsAsBuffer();
-  }
-
-  addCompileResult(file, result) {
-    const path = file.customPath;
-
-    file.addAsset({
-      data: result,
-      path: path
+    files.forEach((file) => {
+      this.extendFile(file);
+      this.processFile(file);
     });
+  }
+
+  extendFile(file) {
+    file.getCustomPath = function() {
+      return config.map[this.getPathInPackage()];
+    };
+  }
+
+  processFile(file) {
+    const customPath = file.getCustomPath();
+    const path = file.getPathInPackage();
+
+    if (customPath) {
+      this.log(`"${path}" as ${customPath}`);
+
+      file.addAsset({
+        data: file.getContentsAsBuffer(),
+        path: customPath
+      });
+    }
+  }
+
+  log(msg) {
+    if (config.verbose === true) {
+      console.log(colors.blue('[Fonts]'), msg);
+    }
   }
 }
+
+Plugin.registerCompiler({
+  extensions: config.extensions
+}, () => new FontsCompiler);
 
 function getConfig(configFileName) {
   var path = Plugin.path;
@@ -82,8 +71,3 @@ function getConfig(configFileName) {
   }
   return userConfig;
 }
-
-
-Plugin.registerCompiler({
-  extensions: config.extensions
-}, () => new FontsCompiler);

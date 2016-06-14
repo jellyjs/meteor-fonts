@@ -1,6 +1,6 @@
 Package.describe({
   name: 'mys:fonts',
-  version: '0.0.1',
+  version: '0.0.2',
   summary: 'Load fonts from node modules and imports',
   documentation: 'README.md'
 });
@@ -15,7 +15,8 @@ Package.registerBuildPlugin({
     'plugin.js'
   ],
   npmDependencies: {
-    lodash: '4.13.1'
+    lodash: '4.13.1',
+    colors: '1.1.2'
   }
 });
 
