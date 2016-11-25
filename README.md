@@ -17,17 +17,17 @@ This package requires a `map` of fonts that contains:
 - **source path** - an absolute path where to look for a font
 - **destination path** - an absolute path where to put that font
 
-**- `extensions: array`** default: `ttf, woof`
+**- `extensions: array`** default: `ttf, woff`
 
 It also depends on `extensions`. It tells the plugin which files we want to use as fonts.
 
 By default:
 - ttf
-- woof
+- woff
 
 **- `verbose: boolean`** default: `false`
 
-Displays informations about used fonts.
+Displays information about used fonts.
 
 It's important to keep `fonts.json` inside the **root directory** of your app.
 

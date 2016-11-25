@@ -10,7 +10,7 @@ const defaultConfig = {
   verbose: false,
   extensions: [
     'ttf',
-    'woof'
+    'woff'
   ],
   map: {}
 };
